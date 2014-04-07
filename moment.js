@@ -390,6 +390,10 @@
         return a;
     }
 
+    // Underscore's extend performs better than Moment's one, and outputs
+    // the same result.
+    extend = _.extend;
+
     function cloneMoment(m) {
         var result = {}, i;
         for (i in m) {
@@ -400,6 +404,13 @@
 
         return result;
     }
+
+    // Underscore's clone performs better than Moment's one, the only drawback
+    // being that Moment's one checks if the properties are included in
+    // momentProperties, while Lodash's one will include all properties in
+    // the cloned object.
+    // Not an issue for us.
+    cloneMoment = _.clone;
 
     function absRound(number) {
         if (number < 0) {
@@ -2448,7 +2459,7 @@
     if (hasModule) {
         module.exports = moment;
     } else if (typeof define === "function" && define.amd) {
-        define("moment", function (require, exports, module) {
+        define(["module", "underscore"], function (module) {
             if (module.config && module.config() && module.config().noGlobal === true) {
                 // release the global variable
                 globalScope.moment = oldGlobalMoment;
